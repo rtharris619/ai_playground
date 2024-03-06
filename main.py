@@ -1,3 +1,5 @@
 import neural_nets.neural_net_3 as network
 
-network.test_neural_network()
+import open_ai.chat_completions as Open_AI
+
+Open_AI.driver()
