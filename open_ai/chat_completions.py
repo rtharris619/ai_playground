@@ -2,6 +2,8 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 import time
+from pathlib import Path
+from enum import Enum
 
 load_dotenv()
 
@@ -99,5 +101,66 @@ def use_assistant():
         current += 1
 
 
+def use_vision():
+    response = client.chat.completions.create(
+        model="gpt-4-vision-preview",
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "What's in the image?"},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/"
+                                   "Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-"
+                                   "wisconsin-madison-the-nature-boardwalk.jpg"
+                        }
+                    }
+                ]
+            }
+        ],
+        max_tokens=300
+    )
+
+    choice = response.choices[0]
+    if choice:
+        print(choice.message.content)
+
+    # 1.
+    # 'The image shows a wooden boardwalk stretching through a lush green grassy area.
+    # The boardwalk is leading towards the horizon and is surrounded on both sides by tall grasses.
+    # The sky above is partly cloudy with a mix of blue sky and white clouds, suggesting a nice day with good weather.
+    # The scene appears serene, and the landscape is likely a natural reserve or a park where the boardwalk is meant
+    # for visitors to enjoy the scenery without disturbing the natural vegetation.'
+
+    # 2.
+    # This image shows a scenic natural landscape featuring a wooden boardwalk or path extending through a grassy field.
+    # The field is lush with vibrant green grass and a variety of wild plants. In the distance, you can see a line of
+    # trees and shrubs marking the horizon. The sky is a soft blue, dotted with wispy white clouds, suggesting a calm
+    # and fair weather day. The image conveys a sense of tranquility and the beauty of a natural, open space.
+
+
+class Voice(Enum):
+    Alloy = "alloy"
+    Echo = "echo"
+    Fable = "fable"
+    Onyx = "onyx"
+    Nova = "nova"
+    Shimmer = "shimmer"
+
+
+def text_to_speech():
+
+    speech_file_path = Path(__file__).parent / "speech.mp3"
+    response = client.audio.speech.create(
+        model="tts-1",
+        voice=Voice.Shimmer.value,
+        input="Today is a wonderful day to build something people love!"
+    )
+
+    response.stream_to_file(speech_file_path)
+
+
 def driver():
-    use_assistant()
+    text_to_speech()
