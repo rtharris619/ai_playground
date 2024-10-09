@@ -142,12 +142,12 @@ def use_vision():
 
 
 class Voice(Enum):
-    Alloy = "alloy"
-    Echo = "echo"
-    Fable = "fable"
-    Onyx = "onyx"
-    Nova = "nova"
-    Shimmer = "shimmer"
+    Alloy = 'alloy'
+    Echo = 'echo'
+    Fable = 'fable'
+    Onyx = 'onyx'
+    Nova = 'nova'
+    Shimmer = 'shimmer'
 
 
 def text_to_speech():
